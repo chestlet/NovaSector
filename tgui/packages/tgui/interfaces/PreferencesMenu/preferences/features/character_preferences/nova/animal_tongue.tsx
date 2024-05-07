@@ -2,26 +2,26 @@
 import {  Feature, FeatureShortTextInput } from '../../base';
 
 export const animal_tongue_say: Feature<string> = {
-  name: 'Says.',
+  name: 'Say',
   component: FeatureShortTextInput,
 };
 
 export const animal_tongue_ask: Feature<string> = {
-  name: 'Asks?',
+  name: 'Ask',
   component: FeatureShortTextInput,
 };
 
 export const animal_tongue_exclaim: Feature<string> = {
-  name: 'Exclaims!',
+  name: 'Exclaim',
   component: FeatureShortTextInput,
 };
 
 export const animal_tongue_whisper: Feature<string> = {
-  name: 'whispers.',
+  name: 'Whisper',
   component: FeatureShortTextInput,
 };
 
 export const animal_tongue_yell: Feature<string> = {
-  name: 'Yells!!',
+  name: 'Yell',
   component: FeatureShortTextInput,
 };
