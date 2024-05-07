@@ -298,6 +298,120 @@ GLOBAL_VAR_INIT(DNR_trait_overlay, generate_DNR_trait_overlay())
 	new_tongue.copy_traits_from(human_holder.get_organ_slot(ORGAN_SLOT_TONGUE))
 	new_tongue.Insert(human_holder, special = TRUE, movement_flags = DELETE_IF_REPLACED)
 
+/datum/quirk/animal_tongue
+	name = "Animal Tongue"
+	desc = "Be it from birth or through extensive genemodding, you have an animal's tongue! This will replace most other tongue-based speech quirks."
+	gain_text = span_notice("You tongue feels odd, but you'll get used to it!")
+	lose_text = span_notice("Your tongue feels... Normal!")
+	/// No medical record text, because that feels silly for quirks that don't have any actual negative or positive effects.
+	value = 0
+	icon = FA_ICON_GRIN_TONGUE
+
+/datum/quirk_constant_data/animal_tongue
+	associated_typepath = /datum/quirk/animal_tongue
+	customization_options = list(
+		/datum/preference/text/animal_tongue/say,
+		/datum/preference/text/animal_tongue/ask,
+		/datum/preference/text/animal_tongue/exclaim,
+		/datum/preference/text/animal_tongue/whisper,
+		/datum/preference/text/animal_tongue/yell
+	)
+
+/datum/preference/text/animal_tongue
+	savefile_key = "animal_tongue"
+	savefile_identifier = PREFERENCE_CHARACTER
+	category = PREFERENCE_CATEGORY_MANUALLY_RENDERED
+	maximum_value_length = 12
+
+/datum/preference/text/animal_tongue/say
+	savefile_key = "animal_tongue_say"
+
+/datum/preference/text/animal_tongue/say/serialize(input)
+	return htmlrendertext(input)
+
+/datum/preference/text/animal_tongue/say/deserialize(input, datum/preferences/preferences)
+	var/clean_input = htmlrendertext(input)
+	if(!isnull(clean_input))
+		return clean_input
+	else
+		return "says"
+
+/datum/preference/text/animal_tongue/ask
+	savefile_key = "animal_tongue_ask"
+
+/datum/preference/text/animal_tongue/ask/serialize(input)
+	return htmlrendertext(input)
+
+/datum/preference/text/animal_tongue/ask/deserialize(input, datum/preferences/preferences)
+	var/clean_input = htmlrendertext(input)
+	if(!isnull(clean_input))
+		return clean_input
+	else
+		return "asks"
+
+/datum/preference/text/animal_tongue/exclaim
+	savefile_key = "animal_tongue_exclaim"
+
+/datum/preference/text/animal_tongue/exclaim/serialize(input)
+	return htmlrendertext(input)
+
+/datum/preference/text/animal_tongue/exclaim/deserialize(input, datum/preferences/preferences)
+	var/clean_input = htmlrendertext(input)
+	if(!isnull(clean_input))
+		return clean_input
+	else
+		return "exclaims"
+
+/datum/preference/text/animal_tongue/whisper
+	savefile_key = "animal_tongue_whisper"
+
+/datum/preference/text/animal_tongue/whisper/serialize(input)
+	return htmlrendertext(input)
+
+/datum/preference/text/animal_tongue/whisper/deserialize(input, datum/preferences/preferences)
+	var/clean_input = htmlrendertext(input)
+	if(!isnull(clean_input))
+		return clean_input
+	else
+		return "whispers"
+
+/datum/preference/text/animal_tongue/yell
+	savefile_key = "animal_tongue_yell"
+
+/datum/preference/text/animal_tongue/yell/serialize(input)
+	return htmlrendertext(input)
+
+/datum/preference/text/animal_tongue/yell/deserialize(input, datum/preferences/preferences)
+	var/clean_input = htmlrendertext(input)
+	if(!isnull(clean_input))
+		return clean_input
+	else
+		return "yells"
+
+/datum/preference/text/animal_tongue/is_accessible(datum/preferences/preferences)
+	if (!..(preferences))
+		return FALSE
+
+	return "animal_tongue" in preferences.all_quirks
+
+/datum/preference/text/animal_tongue/apply_to_human(mob/living/carbon/human/target, value)
+	return
+
+/// End of preference stuff, now for add/remove.
+/datum/quirk/animal_tongue/add_unique(client/client_source)
+	if(!client_source) /// If there's no client, there's no prefs to read from!
+		return
+
+	var/mob/living/carbon/human/human_holder = quirk_holder
+	var/obj/item/organ/internal/tongue/holder_tongue = human_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
+
+	holder_tongue.say_mod = client_source.prefs.read_preference(/datum/preference/text/animal_tongue/say)
+
+	human_holder.verb_ask = client_source.prefs.read_preference(/datum/preference/text/animal_tongue/ask)
+	human_holder.verb_exclaim = client_source.prefs.read_preference(/datum/preference/text/animal_tongue/exclaim)
+	human_holder.verb_whisper = client_source.prefs.read_preference(/datum/preference/text/animal_tongue/whisper)
+	human_holder.verb_yell = client_source.prefs.read_preference(/datum/preference/text/animal_tongue/yell)
+
 #define SEVERITY_STUN 1
 #define SEVERITY_SNEEZE 2
 #define SEVERITY_KNOCKDOWN 3
