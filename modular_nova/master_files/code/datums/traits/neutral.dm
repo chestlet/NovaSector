@@ -392,7 +392,7 @@ GLOBAL_VAR_INIT(DNR_trait_overlay, generate_DNR_trait_overlay())
 	if (!..(preferences))
 		return FALSE
 
-	return "animal_tongue" in preferences.all_quirks
+	return "Animal Tongue" in preferences.all_quirks
 
 /datum/preference/text/animal_tongue/apply_to_human(mob/living/carbon/human/target, value)
 	return
