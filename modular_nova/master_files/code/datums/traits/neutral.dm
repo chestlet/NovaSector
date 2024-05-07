@@ -323,70 +323,45 @@ GLOBAL_VAR_INIT(DNR_trait_overlay, generate_DNR_trait_overlay())
 	category = PREFERENCE_CATEGORY_MANUALLY_RENDERED
 	maximum_value_length = 12
 
-/datum/preference/text/animal_tongue/say
-	savefile_key = "animal_tongue_say"
-
-/datum/preference/text/animal_tongue/say/serialize(input)
+datum/preference/text/animal_tongue/serialize(input)
 	return htmlrendertext(input)
 
-/datum/preference/text/animal_tongue/say/deserialize(input, datum/preferences/preferences)
+/datum/preference/text/animal_tongue/deserialize(input, datum/preferences/preferences)
 	var/clean_input = htmlrendertext(input)
 	if(!isnull(clean_input))
 		return clean_input
 	else
-		return "says"
+		return
+
+/datum/preference/text/animal_tongue/say
+	savefile_key = "animal_tongue_say"
+
+/datum/preference/text/animal_tongue/say/create_default_value()
+	return "says"
 
 /datum/preference/text/animal_tongue/ask
 	savefile_key = "animal_tongue_ask"
 
-/datum/preference/text/animal_tongue/ask/serialize(input)
-	return htmlrendertext(input)
-
-/datum/preference/text/animal_tongue/ask/deserialize(input, datum/preferences/preferences)
-	var/clean_input = htmlrendertext(input)
-	if(!isnull(clean_input))
-		return clean_input
-	else
-		return "asks"
+/datum/preference/text/animal_tongue/whisper/create_default_value()
+	return "asks"
 
 /datum/preference/text/animal_tongue/exclaim
 	savefile_key = "animal_tongue_exclaim"
 
-/datum/preference/text/animal_tongue/exclaim/serialize(input)
-	return htmlrendertext(input)
-
-/datum/preference/text/animal_tongue/exclaim/deserialize(input, datum/preferences/preferences)
-	var/clean_input = htmlrendertext(input)
-	if(!isnull(clean_input))
-		return clean_input
-	else
-		return "exclaims"
+/datum/preference/text/animal_tongue/exclaim/create_default_value()
+	return "exclaims"
 
 /datum/preference/text/animal_tongue/whisper
 	savefile_key = "animal_tongue_whisper"
 
-/datum/preference/text/animal_tongue/whisper/serialize(input)
-	return htmlrendertext(input)
-
-/datum/preference/text/animal_tongue/whisper/deserialize(input, datum/preferences/preferences)
-	var/clean_input = htmlrendertext(input)
-	if(!isnull(clean_input))
-		return clean_input
-	else
-		return "whispers"
+/datum/preference/text/animal_tongue/whisper/create_default_value()
+	return "whispers"
 
 /datum/preference/text/animal_tongue/yell
 	savefile_key = "animal_tongue_yell"
 
-/datum/preference/text/animal_tongue/yell/serialize(input)
-	return htmlrendertext(input)
-
-/datum/preference/text/animal_tongue/yell/deserialize(input, datum/preferences/preferences)
-	var/clean_input = htmlrendertext(input)
-	if(!isnull(clean_input))
-		return clean_input
-	else
-		return "yells"
+/datum/preference/text/animal_tongue/yell/create_default_value()
+	return "yells"
 
 /datum/preference/text/animal_tongue/is_accessible(datum/preferences/preferences)
 	if (!..(preferences))
@@ -399,7 +374,7 @@ GLOBAL_VAR_INIT(DNR_trait_overlay, generate_DNR_trait_overlay())
 
 /// End of preference stuff, now for add/remove.
 /datum/quirk/animal_tongue/add_unique(client/client_source)
-	if(!client_source) /// If there's no client, there's no prefs to read from!
+	if(!client_source)
 		return
 
 	var/mob/living/carbon/human/human_holder = quirk_holder
