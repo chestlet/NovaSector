@@ -301,7 +301,7 @@ GLOBAL_VAR_INIT(DNR_trait_overlay, generate_DNR_trait_overlay())
 /datum/quirk/animal_tongue
 	name = "Animal Tongue"
 	desc = "Be it from birth or through extensive genemodding, you have an animal's tongue! This will replace most other tongue-based speech quirks."
-	gain_text = span_notice("You tongue feels odd, but you'll get used to it!")
+	gain_text = span_notice("Your tongue feels odd, but you'll get used to it!")
 	lose_text = span_notice("Your tongue feels... Normal!")
 	/// No medical record text, because that feels silly for quirks that don't have any actual negative or positive effects.
 	value = 0
