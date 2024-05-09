@@ -323,6 +323,7 @@ GLOBAL_VAR_INIT(DNR_trait_overlay, generate_DNR_trait_overlay())
 	category = PREFERENCE_CATEGORY_MANUALLY_RENDERED
 	maximum_value_length = 12
 
+/// Serialize/deserialize in parent. Less copy and pasted code. Will *probably* never return null. See next comment.
 datum/preference/text/animal_tongue/serialize(input)
 	return htmlrendertext(input)
 
@@ -333,6 +334,7 @@ datum/preference/text/animal_tongue/serialize(input)
 	else
 		return
 
+/// Once value is set, it can't be set to null by the player, so in theory de/serialize will never return null. Not because of a player, at least...
 /datum/preference/text/animal_tongue/say
 	savefile_key = "animal_tongue_say"
 
