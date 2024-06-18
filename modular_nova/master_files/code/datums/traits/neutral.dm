@@ -324,7 +324,7 @@ GLOBAL_VAR_INIT(DNR_trait_overlay, generate_DNR_trait_overlay())
 	maximum_value_length = 12
 
 /// Serialize/deserialize in parent. Less copy and pasted code. Will *probably* never return null. See next comment.
-datum/preference/text/animal_tongue/serialize(input)
+/datum/preference/text/animal_tongue/serialize(input)
 	return htmlrendertext(input)
 
 /datum/preference/text/animal_tongue/deserialize(input, datum/preferences/preferences)
