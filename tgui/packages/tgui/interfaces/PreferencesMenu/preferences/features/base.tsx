@@ -272,11 +272,10 @@ export const FeatureTextInput = (
 
   return (
     <TextArea
-      scrollbar
       height="100px"
       value={value}
       maxLength={serverData?.maximum_length}
-      onChange={(_, value) => handleSetValue(value)}
+      onChange={(value) => handleSetValue(value)}
     />
   );
 };
