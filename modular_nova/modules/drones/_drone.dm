@@ -8,7 +8,7 @@
 			"3. Any Cyborgs speaking in Encoded Audio Language within sight, or on Binary (Silicon Radio).\n"+\
 			"4. Anyone that appears fully Synthetic, speaking in Encoded Audio Language, within sight.\n"+\
 			"5. Drones, including You. You are a Hivemind. Love your fellow Drone.\n")+\
-		span_boldwarning("Laws<\n")+\
+		span_boldwarning("Laws\n")+\
 		span_revnotice( 
 			"1. You are part of a Hivemind of eusocial synthetic insects, and have a simple personality. You speak only in Encoded Audio Language (EAL) and may not willingly engage with any forms of translation whatsoever other than a PAI. You are not Crew or an Antagonist. You should not be a detriment to other players, their experience, or their ability/opportunity to perform their role. You are expected to roleplay this identity immersively.\n"+\
 			"2. The Structure you awoke in is your Hive. Other Drones, Silicons, and Synthetic life inside the Hive are your Hivemates. Hivemates have evolved a symbiotic relationship with Organic Life, as both groups must coexist within the Hive.\n"+\
@@ -21,7 +21,7 @@
 		span_notice( 
 			">Drones (also known as Maintenance Drones, Station Drones, or Derelict Drones) are a unique supporting social role, much like a normal Cyborg. All Drones obey Drone Policy.\n"+\
 			">You exist to assist others while acting under an immersed identity, providing mechanical support to those around you. You help the station recover from disaster or crisis. You fix moused wires.\n"+\
-			"Prefix your message with :b to speak in I/O (Silicon Radio).</span>\n")+\
+			"Prefix your message with :b to speak in I/O (Silicon Radio).\n")+\
 		span_boldwarning( 
 			"Additional Rulings\n")+\
 		span_notice( 
