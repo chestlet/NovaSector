@@ -71,6 +71,9 @@
 // avian traits
 #define TRAIT_AVIAN "avian_aspect"
 
+// rodential traits
+#define TRAIT_RODENTIAL "rodential_aspect"
+
 // chameleon mutation
 #define TRAIT_CHAMELEON_SKIN "chameleon_skin"
 
