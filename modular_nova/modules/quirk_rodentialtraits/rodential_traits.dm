@@ -1,3 +1,9 @@
+// Edit /area/station/maintenance to have a mood bonus for rodents. If you have a better way to do this please suggest it. This stops other things from applying positive moods in maintenance (general) although we have nothing that does that.
+/area/station/maintenance
+	mood_bonus = 5
+	mood_message = "It's like a maze!"
+	mood_trait = TRAIT_RODENTIAL
+
 /datum/quirk/rodential_aspect
 	name = "Rodential Traits"
 	desc = "Squeak! You happen to act like a rodent, for whatever reason. "
@@ -7,6 +13,7 @@
 	value = 0
 	mob_trait = TRAIT_RODENTIAL
 	icon = FA_ICON_MOUSE
+	// nova_stars_only = TRUE You can kill yourself with this quirk very easily so I was advised to make it a Nova Star quirk, which is fair.
 
 /// Signal handler, INVOKE_ASYNCs chew_wire if combat mode is on and an accessible wire is present.
 /datum/quirk/rodential_aspect/proc/chew_invoker(null, obj/structure/cable/target)
@@ -23,9 +30,10 @@
 				INVOKE_ASYNC(src, PROC_REF(chew_wire), target)
 
 /// Chews through a cable with a high chance of electrocution (code stolen directly from mouse.dm just with a do_after thrown ontop)
-/datum/quirk/rodential_aspect/proc/chew_wire(obj/structure/cable/target)
+/datum/quirk/rodential_aspect/proc/chew_wire(obj/structure/cable/target) // Chew wire like the stupid little death prone rodent you are.
 	quirk_holder.visible_message(
-		span_notice("You wind your head back, preparing to chew through \the [target].")
+		span_warning("[quirk_holder] stares at \the [target] with a hungry gaze!"),
+		span_notice("You wind your head back, preparing to chew through \the [target]."),
 	)
 	if(do_after(quirk_holder, 2 SECONDS, target))
 		if(target.avail() && !HAS_TRAIT(src, TRAIT_SHOCKIMMUNE) && prob(85))
@@ -45,9 +53,9 @@
 		target.deconstruct()
 
 /datum/quirk/rodential_aspect/add_unique()
-	RegisterSignal(quirk_holder, COMSIG_MOB_CLICKON, PROC_REF(chew_invoker))
+	RegisterSignal(quirk_holder, COMSIG_MOB_CLICKON, PROC_REF(chew_invoker)) // This is a slightly unhinged way to do this but it works, was very easy, and feels fairly natural in round.
 	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
-	tongue.set_say_modifiers(quirk_holder, say = "squeaks")
+	tongue.set_say_modifiers(quirk_holder, say = "squeaks", ask = "sqweeks", whisper = "snuffles", exclaim = "squees", yell = "shrieks")
 	tongue.liked_foodtypes = tongue.liked_foodtypes + DAIRY // Rodents don't actually like cheese all that much but the stereotype is set in stone and we already have a rat tongue in the codebase that likes cheese so why not?
 
 /datum/quirk/rodential_aspect/remove()
