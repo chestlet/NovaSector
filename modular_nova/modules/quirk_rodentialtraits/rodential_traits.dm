@@ -34,7 +34,7 @@
 				span_userdanger("As you bite deeply into [target], you suddenly realize this may have been a bad idea."),
 				span_hear("You hear electricity crack."),
 			)
-			quirk_holder.electrocute_act(quirk_holder.maxHealth * 2, target, 1, flags = SHOCK_NOGLOVES, )
+			quirk_holder.electrocute_act(quirk_holder.maxHealth * 1.5, target, 1, flags = SHOCK_NOGLOVES, )
 		else
 			quirk_holder.visible_message(
 				span_warning("[quirk_holder] chews through \the [target]."),
