@@ -13,7 +13,7 @@
 	value = 0
 	mob_trait = TRAIT_RODENTIAL
 	icon = FA_ICON_MOUSE
-	// nova_stars_only = TRUE You can kill yourself with this quirk very easily so I was advised to make it a Nova Star quirk, which is fair.
+	// nova_stars_only = TRUE You can kill yourself with this quirk very easily so I was advised to make it a Nova Star quirk, which is fair, but you can also just, do the same with wirecutters. We'll see how people act with it first.
 
 /// Signal handler, INVOKE_ASYNCs chew_wire if combat mode is on and an accessible wire is present.
 /datum/quirk/rodential_aspect/proc/chew_invoker(null, obj/structure/cable/target)
@@ -42,7 +42,8 @@
 				span_userdanger("As you bite deeply into [target], you suddenly realize this may have been a bad idea."),
 				span_hear("You hear electricity crack."),
 			)
-			quirk_holder.electrocute_act(quirk_holder.maxHealth * 1.5, target, 1, flags = SHOCK_NOGLOVES, )
+			var/shock_damage = target.powernet.get_electrocute_damage()
+			quirk_holder.electrocute_act(shock_damage, target, 1, flags = SHOCK_NOGLOVES, )
 		else
 			quirk_holder.visible_message(
 				span_warning("[quirk_holder] chews through \the [target]."),
