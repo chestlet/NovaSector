@@ -19,6 +19,8 @@
 /datum/quirk/rodential_aspect/proc/chew_invoker(null, obj/structure/cable/target)
 	SIGNAL_HANDLER
 
+	if(get_dist(quirk_holder, target) > 1)
+		return
 	if(!istype(target, /obj/structure/cable))
 		return
 
@@ -31,18 +33,14 @@
 
 /// Chews through a cable with a high chance of electrocution (code stolen directly from mouse.dm just with a do_after thrown ontop)
 /datum/quirk/rodential_aspect/proc/chew_wire(obj/structure/cable/target) // Chew wire like the stupid little death prone rodent you are.
-	quirk_holder.visible_message(
-		span_warning("[quirk_holder] stares at \the [target] with a hungry gaze!"),
-		span_notice("You wind your head back, preparing to chew through \the [target]."),
-	)
-	if(do_after(quirk_holder, 2 SECONDS, target))
-		if(target.avail() && !HAS_TRAIT(src, TRAIT_SHOCKIMMUNE) && prob(85))
+	if(do_after(quirk_holder, 2 SECONDS, target, interaction_key = "rodential_aspect_chew_wire_proc", max_interact_count = 1))
+		var/shock_damage = target.powernet.get_electrocute_damage()
+		if(target.avail() && !HAS_TRAIT(src, TRAIT_SHOCKIMMUNE) && prob(85) && shock_damage > 0)
 			quirk_holder.visible_message(
 				span_warning("[quirk_holder] chews through \the [target]. [quirk_holder.p_Theyre()] toast!"),
 				span_userdanger("As you bite deeply into [target], you suddenly realize this may have been a bad idea."),
 				span_hear("You hear electricity crack."),
 			)
-			var/shock_damage = target.powernet.get_electrocute_damage()
 			quirk_holder.electrocute_act(shock_damage, target, 1, flags = SHOCK_NOGLOVES, )
 		else
 			quirk_holder.visible_message(
@@ -62,5 +60,5 @@
 /datum/quirk/rodential_aspect/remove()
 	UnregisterSignal(quirk_holder, COMSIG_MOB_CLICKON)
 	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
-	tongue.set_say_modifiers(quirk_holder, say = initial(tongue.say_mod))
+	tongue.set_say_modifiers(quirk_holder, say = initial(tongue.say_mod), ask = initial(quirk_holder.verb_ask), whisper = initial(quirk_holder.verb_whisper), exclaim = initial(quirk_holder.verb_exclaim), yell = initial(quirk_holder.verb_yell))
 	tongue.liked_foodtypes = tongue.liked_foodtypes - DAIRY
