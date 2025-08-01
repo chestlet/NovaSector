@@ -64,7 +64,29 @@
 	yell = "barks"
 	say = "woofs"
 
+/datum/quirk/tongue_quirk/feline_aspect
+	name = "Feline Traits"
+	desc = "You happen to act like a feline, for whatever reason. This will replace most other tongue-based speech quirks."
+	gain_text = span_notice("Nya could go for some catnip right about now...")
+	lose_text = span_notice("You feel less attracted to lasers.")
+	medical_record_text = "Patient seems to possess behavior much like a feline."
+	mob_trait = TRAIT_FELINE
+	icon = FA_ICON_CAT
+	// As this is a subtype of tongue_quirk, we will set these variables for our post_add to use.
+	ask = "mrrps"
+	exclaim = "mrrowls"
+	whisper = "purrs"
+	yell = "yowls"
+	say = "meows"
 
+/datum/quirk/tongue_quirk/feline_aspect/add(client/client_source)
+	ADD_TRAIT(quirk_holder, TRAIT_WATER_HATER, QUIRK_TRAIT)
+
+/datum/quirk/tongue_quirk/feline_aspect/remove(client/client_source)
+	. = ..()
+	REMOVE_TRAIT(quirk_holder, TRAIT_WATER_HATER, QUIRK_TRAIT)
+
+// Put more complex quirks below this comment, ideally. Makes sense to put anything simple towards the top.
 /datum/quirk/tongue_quirk/custom_tongue
 	name = "Custom Tongue"
 	desc = "Your tongue is not standard. It has a shape and texture that is unique to you, affecting the way you speak."
