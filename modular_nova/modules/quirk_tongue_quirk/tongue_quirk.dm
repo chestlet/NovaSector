@@ -87,6 +87,74 @@
 	REMOVE_TRAIT(quirk_holder, TRAIT_WATER_HATER, QUIRK_TRAIT)
 
 // Put more complex quirks below this comment, ideally. Makes sense to put anything simple towards the top.
+
+// Edit /area/station/maintenance to have a mood bonus for rodents. If you have a better way to do this please suggest it. This stops other things from applying positive moods in maintenance (general) although we have nothing that does that.
+/area/station/maintenance
+	mood_bonus = 5
+	mood_message = "It's like a maze!"
+	mood_trait = TRAIT_RODENTIAL
+
+/datum/quirk/tongue_quirk/rodential_aspect
+	name = "Rodential Traits"
+	desc = "Squeak! You happen to act like a rodent, for whatever reason. "
+	gain_text = span_notice("You feel especially rodential today.")
+	lose_text = span_notice("You no longer desire to eat a bunch of baking soda and then oil.")
+	medical_record_text = "Patient expressed desires to 'dig into' the insulation."
+	value = 0
+	mob_trait = TRAIT_RODENTIAL
+	icon = FA_ICON_MOUSE
+	// nova_stars_only = TRUE You can kill yourself with this quirk very easily so I was advised to make it a Nova Star quirk, which is fair, but you can also just, do the same with wirecutters. We'll see how people act with it first.
+	ask = "sqweeks"
+	exclaim = "squeess"
+	whisper = "snuffles"
+	yell = "shrieks"
+	say = "squeaks"
+
+/// Signal handler, INVOKE_ASYNCs chew_wire if combat mode is on and an accessible wire is present.
+/datum/quirk/tongue_quirk/rodential_aspect/proc/chew_invoker(null, obj/structure/cable/target)
+	SIGNAL_HANDLER
+
+	if(get_dist(quirk_holder, target) > 1)
+		return
+	if(!istype(target, /obj/structure/cable))
+		return
+
+	var/turf/open/floor/floor = get_turf(target)
+	if(floor.underfloor_accessibility >= UNDERFLOOR_INTERACTABLE)
+		var/obj/item/held = quirk_holder.get_active_held_item()
+		if(!held && !quirk_holder.combat_mode == 0)
+			if(!quirk_holder.is_mouth_covered(ITEM_SLOT_MASK) && !quirk_holder.is_mouth_covered(ITEM_SLOT_HEAD))
+				INVOKE_ASYNC(src, PROC_REF(chew_wire), target)
+
+/// Chews through a cable with a high chance of electrocution (code stolen directly from mouse.dm just with a do_after thrown ontop)
+/datum/quirk/tongue_quirk/rodential_aspect/proc/chew_wire(obj/structure/cable/target) // Chew wire like the stupid little death prone rodent you are.
+	if(do_after(quirk_holder, 2 SECONDS, target, interaction_key = "rodential_aspect_chew_wire_proc", max_interact_count = 1))
+		var/shock_damage = target.powernet.get_electrocute_damage()
+		if(target.avail() && !HAS_TRAIT(src, TRAIT_SHOCKIMMUNE) && prob(85) && shock_damage > 0)
+			quirk_holder.visible_message(
+				span_warning("[quirk_holder] chews through \the [target]. [quirk_holder.p_Theyre()] toast!"),
+				span_userdanger("As you bite deeply into [target], you suddenly realize this may have been a bad idea."),
+				span_hear("You hear electricity crack."),
+			)
+			quirk_holder.electrocute_act(shock_damage, target, 1, flags = SHOCK_NOGLOVES, )
+		else
+			quirk_holder.visible_message(
+				span_warning("[quirk_holder] chews through \the [target]."),
+				span_notice("You chew through \the [target]."),
+			)
+
+		playsound(target, 'sound/effects/sparks/sparks2.ogg', 100, TRUE)
+		target.deconstruct()
+
+/datum/quirk/tongue_quirk/rodential_aspect/add()
+	RegisterSignal(quirk_holder, COMSIG_MOB_CLICKON, PROC_REF(chew_invoker)) // This is a slightly unhinged way to do this but it works, was very easy, and feels fairly natural in round.
+	tongue.liked_foodtypes = tongue.liked_foodtypes + DAIRY // Rodents don't actually like cheese all that much but the stereotype is set in stone and we already have a rat tongue in the codebase that likes cheese so why not?
+
+/datum/quirk/rodential_aspect/remove()
+	. = ..()
+	UnregisterSignal(quirk_holder, COMSIG_MOB_CLICKON)
+	tongue.liked_foodtypes = tongue.liked_foodtypes - DAIRY
+
 /datum/quirk/tongue_quirk/custom_tongue
 	name = "Custom Tongue"
 	desc = "Your tongue is not standard. It has a shape and texture that is unique to you, affecting the way you speak."

@@ -8895,7 +8895,6 @@
 #include "modular_nova\modules\QOL\code\game\objects\items\mop.dm"
 #include "modular_nova\modules\quirk_heavyset\heavyset.dm"
 #include "modular_nova\modules\quirk_masquerade\masquerade.dm"
-#include "modular_nova\modules\quirk_rodentialtraits\rodential_traits.dm"
 #include "modular_nova\modules\quirk_skilled\skilled.dm"
 #include "modular_nova\modules\quirk_tongue_quirk\tongue_quirk.dm"
 #include "modular_nova\modules\quirk_unsteady\unsteady.dm"
