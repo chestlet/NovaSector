@@ -9,14 +9,14 @@
 	var/yell
 	var/say
 
-/datum/quirk/tongue_quirk/post_add(client/client_source) // Run this on all subtypes as a blanket rule. Overwrite on subtype if need be.
+/datum/quirk/tongue_quirk/add(client/client_source) // Run this on all subtypes as a blanket rule. Overwrite on subtype if need be.
 	set_say_modifiers(ask, exclaim, whisper, yell, say)
 
 /datum/quirk/tongue_quirk/remove(client/client_source) // Same as above.
 	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 	set_say_modifiers(initial(quirk_holder.verb_ask), initial(quirk_holder.verb_exclaim), initial(quirk_holder.verb_whisper), initial(quirk_holder.verb_yell), initial(tongue.say_mod))
 
-/// A proc to set the holder's say modifiers, used for ALL tongue_quirks in this file. Use Avian Traits as an example, let say modifiers be handed in the post_add unless you need to do something extra unique.
+/// A proc to set the holder's say modifiers, used for ALL tongue_quirks in this file. Use Avian Traits as a basic example, and feline traits as a better example.
 /datum/quirk/tongue_quirk/proc/set_say_modifiers(ask, exclaim, whisper, yell, say)
 	if(SEND_SIGNAL(quirk_holder, COMSIG_SET_SAY_MODIFIERS)) // If quirk_holder has COMSIG_SET_SAY_MODIFIERS registered to them then early return. Used for custom tongue to prevent overwrites.
 		return
@@ -32,7 +32,7 @@
 		var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 		tongue.say_mod = say
 
-/datum/quirk/tongue_quirk/avian_aspect // We don't actually need an add for this because it does nothing, the post_add will do it for us.
+/datum/quirk/tongue_quirk/avian_aspect // We don't actually need to make an add for this. Tongue Quirk will do it for us.
 	name = "Avian Traits"
 	desc = "You're a birdbrain, or you've got a bird's brain. This will replace most other tongue-based speech quirks."
 	gain_text = span_notice("BAWWWWWK LEAVE THE HEADSET BAWKKKKK!")
@@ -48,7 +48,7 @@
 	yell = "shrieks"
 	say = "chirps"
 
-/datum/quirk/tongue_quirk/canine_aspect // We don't actually need an add for this because it does nothing, the post_add will do it for us.
+/datum/quirk/tongue_quirk/canine_aspect // We don't actually need to make an add for this. Tongue Quirk will do it for us.
 	name = "Canidae Traits"
 	desc = "Bark. You seem to act like a canine for whatever reason. This will replace most other tongue-based speech quirks."
 	gain_text = span_notice("B-.. Bacon strips...")
@@ -57,7 +57,7 @@
 	icon = FA_ICON_DOG
 	value = 0
 	medical_record_text = "Patient was seen digging through the trash can. Keep an eye on them."
-	// As this is a subtype of tongue_quirk, we will set these variables for our post_add to use.
+	// As this is a subtype of tongue_quirk, we will set these variables for tongue_quirk's add to use.
 	ask = "arfs"
 	exclaim = "wans"
 	whisper = "whimpers"
@@ -72,7 +72,7 @@
 	medical_record_text = "Patient seems to possess behavior much like a feline."
 	mob_trait = TRAIT_FELINE
 	icon = FA_ICON_CAT
-	// As this is a subtype of tongue_quirk, we will set these variables for our post_add to use.
+	// As this is a subtype of tongue_quirk, we will set these variables for tongue_quirk's add to use.
 	ask = "mrrps"
 	exclaim = "mrrowls"
 	whisper = "purrs"
@@ -80,19 +80,14 @@
 	say = "meows"
 
 /datum/quirk/tongue_quirk/feline_aspect/add(client/client_source)
+	. = ..()
 	ADD_TRAIT(quirk_holder, TRAIT_WATER_HATER, QUIRK_TRAIT)
 
 /datum/quirk/tongue_quirk/feline_aspect/remove(client/client_source)
 	. = ..()
 	REMOVE_TRAIT(quirk_holder, TRAIT_WATER_HATER, QUIRK_TRAIT)
 
-// Put more complex quirks below this comment, ideally. Makes sense to put anything simple towards the top.
-
-// Edit /area/station/maintenance to have a mood bonus for rodents. If you have a better way to do this please suggest it. This stops other things from applying positive moods in maintenance (general) although we have nothing that does that.
-/area/station/maintenance
-	mood_bonus = 5
-	mood_message = "It's like a maze!"
-	mood_trait = TRAIT_RODENTIAL
+// Put more complex quirks below this comment, ideally.
 
 /datum/quirk/tongue_quirk/rodential_aspect
 	name = "Rodential Traits"
@@ -109,6 +104,12 @@
 	whisper = "snuffles"
 	yell = "shrieks"
 	say = "squeaks"
+
+// Edit /area/station/maintenance to have a mood bonus for rodents. If you have a better way to do this please suggest it. This stops other things from applying positive moods in maintenance (general) although we have nothing that does that.
+/area/station/maintenance
+	mood_bonus = 5
+	mood_message = "It's like a maze!"
+	mood_trait = TRAIT_RODENTIAL
 
 /// Signal handler, INVOKE_ASYNCs chew_wire if combat mode is on and an accessible wire is present.
 /datum/quirk/tongue_quirk/rodential_aspect/proc/chew_invoker(null, obj/structure/cable/target)
@@ -146,12 +147,13 @@
 		playsound(target, 'sound/effects/sparks/sparks2.ogg', 100, TRUE)
 		target.deconstruct()
 
-/datum/quirk/tongue_quirk/rodential_aspect/add()
+/datum/quirk/tongue_quirk/rodential_aspect/add(client/client_source)
+	. = ..()
 	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 	RegisterSignal(quirk_holder, COMSIG_MOB_CLICKON, PROC_REF(chew_invoker)) // This is a slightly unhinged way to do this but it works, was very easy, and feels fairly natural in round.
 	tongue.liked_foodtypes = tongue.liked_foodtypes + DAIRY // Rodents don't actually like cheese all that much but the stereotype is set in stone and we already have a rat tongue in the codebase that likes cheese so why not?
 
-/datum/quirk/rodential_aspect/remove()
+/datum/quirk/rodential_aspect/remove(client/client_source)
 	. = ..()
 	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 	UnregisterSignal(quirk_holder, COMSIG_MOB_CLICKON)
@@ -245,12 +247,8 @@
 
 /datum/quirk/tongue_quirk/custom_tongue/add(client/client_source)
 	RegisterSignal(quirk_holder, COMSIG_SET_SAY_MODIFIERS, PROC_REF(set_custom_tongue)) // Only register the signal, the post_add will trigger the proc.
+	. = ..()
 
 /datum/quirk/tongue_quirk/custom_tongue/remove(client/client_source)
-	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
-	quirk_holder.verb_ask = initial(quirk_holder.verb_ask)
-	quirk_holder.verb_exclaim = initial(quirk_holder.verb_exclaim)
-	quirk_holder.verb_whisper = initial(quirk_holder.verb_whisper)
-	quirk_holder.verb_yell = initial(quirk_holder.verb_yell)
-	tongue.say_mod = initial(tongue.say_mod)
 	UnregisterSignal(quirk_holder, COMSIG_SET_SAY_MODIFIERS)
+	. = ..()
