@@ -56,7 +56,7 @@
 	mob_trait = TRAIT_CANINE
 	icon = FA_ICON_DOG
 	value = 0
-	medical_record_text = "Patient was seen digging through the trash can. Keep an eye on them."
+	medical_record_text = "Patient seems to behave like a canine, barking and growling like a dog when agitated."
 	// As this is a subtype of tongue_quirk, we will set these variables for tongue_quirk's add to use.
 	ask = "arfs"
 	exclaim = "wans"
@@ -93,7 +93,7 @@
 	name = "Rodential Traits"
 	desc = "Squeak! You happen to act like a rodent, for whatever reason. "
 	gain_text = span_notice("You feel especially rodential today.")
-	lose_text = span_notice("You no longer desire to eat a bunch of baking soda and then oil.")
+	lose_text = span_notice("You feel a lot less rodential.")
 	medical_record_text = "Patient expressed desires to 'dig into' the insulation."
 	value = 0
 	mob_trait = TRAIT_RODENTIAL
