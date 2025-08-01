@@ -147,11 +147,13 @@
 		target.deconstruct()
 
 /datum/quirk/tongue_quirk/rodential_aspect/add()
+	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 	RegisterSignal(quirk_holder, COMSIG_MOB_CLICKON, PROC_REF(chew_invoker)) // This is a slightly unhinged way to do this but it works, was very easy, and feels fairly natural in round.
 	tongue.liked_foodtypes = tongue.liked_foodtypes + DAIRY // Rodents don't actually like cheese all that much but the stereotype is set in stone and we already have a rat tongue in the codebase that likes cheese so why not?
 
 /datum/quirk/rodential_aspect/remove()
 	. = ..()
+	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 	UnregisterSignal(quirk_holder, COMSIG_MOB_CLICKON)
 	tongue.liked_foodtypes = tongue.liked_foodtypes - DAIRY
 
