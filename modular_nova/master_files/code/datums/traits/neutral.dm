@@ -247,30 +247,6 @@ GLOBAL_VAR_INIT(DNR_trait_overlay, generate_DNR_trait_overlay())
 	new_tongue.copy_traits_from(human_holder.get_organ_slot(ORGAN_SLOT_TONGUE), human_holder)
 	new_tongue.Insert(human_holder, special = TRUE, movement_flags = DELETE_IF_REPLACED)
 
-/datum/quirk/avian_aspect
-	name = "Avian Traits"
-	desc = "You're a birdbrain, or you've got a bird's brain. This will replace most other tongue-based speech quirks."
-	gain_text = span_notice("BAWWWWWK LEAVE THE HEADSET BAWKKKKK!")
-	lose_text = span_notice("You feel less inclined to sit on eggs.")
-	mob_trait = TRAIT_AVIAN
-	icon = FA_ICON_KIWI_BIRD
-	value = 0
-	medical_record_text = "Patient exhibits avian-adjacent mannerisms."
-
-/datum/quirk/avian_aspect/add_unique(client/client_source)
-	var/mob/living/carbon/human/human_holder = quirk_holder
-	var/obj/item/organ/tongue/avian/new_tongue = new(get_turf(human_holder))
-
-	new_tongue.copy_traits_from(human_holder.get_organ_slot(ORGAN_SLOT_TONGUE), human_holder)
-	new_tongue.Insert(human_holder, special = TRUE, movement_flags = DELETE_IF_REPLACED)
-
-/datum/quirk/avian_aspect/remove()
-	var/mob/living/carbon/human/human_holder = quirk_holder
-	var/obj/item/organ/tongue/new_tongue = new human_holder.dna.species.mutanttongue
-
-	new_tongue.copy_traits_from(human_holder.get_organ_slot(ORGAN_SLOT_TONGUE), human_holder)
-	new_tongue.Insert(human_holder, special = TRUE, movement_flags = DELETE_IF_REPLACED)
-
 #define SEVERITY_STUN 1
 #define SEVERITY_SNEEZE 2
 #define SEVERITY_KNOCKDOWN 3

@@ -16,10 +16,10 @@
 	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 	set_say_modifiers(initial(quirk_holder.verb_ask), initial(quirk_holder.verb_exclaim), initial(quirk_holder.verb_whisper), initial(quirk_holder.verb_yell), initial(tongue.say_mod))
 
-/// A proc to set the holder's say modifiers, used for ALL tongue_quirks in this file. Use Canidae Traits as an example, let say modifiers be handed in the post_add unless you need to do something extra unique.
+/// A proc to set the holder's say modifiers, used for ALL tongue_quirks in this file. Use Avian Traits as an example, let say modifiers be handed in the post_add unless you need to do something extra unique.
 /datum/quirk/tongue_quirk/proc/set_say_modifiers(ask, exclaim, whisper, yell, say)
 	if(SEND_SIGNAL(quirk_holder, COMSIG_SET_SAY_MODIFIERS)) // If quirk_holder has COMSIG_SET_SAY_MODIFIERS registered to them then early return. Used for custom tongue to prevent overwrites.
-		return // Early return so other quirks don't overwrite custom tongue.
+		return
 	if(ask)
 		quirk_holder.verb_ask = ask
 	if(exclaim)
@@ -32,6 +32,22 @@
 		var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 		tongue.say_mod = say
 
+/datum/quirk/tongue_quirk/avian_aspect // We don't actually need an add for this because it does nothing, the post_add will do it for us.
+	name = "Avian Traits"
+	desc = "You're a birdbrain, or you've got a bird's brain. This will replace most other tongue-based speech quirks."
+	gain_text = span_notice("BAWWWWWK LEAVE THE HEADSET BAWKKKKK!")
+	lose_text = span_notice("You feel less inclined to sit on eggs.")
+	mob_trait = TRAIT_AVIAN
+	icon = FA_ICON_KIWI_BIRD
+	value = 0
+	medical_record_text = "Patient exhibits avian-adjacent mannerisms."
+	// As this is a subtype of tongue_quirk, we will set these variables for our post_add to use.
+	ask = "peeps"
+	exclaim = "squawks"
+	whisper = "murmurs"
+	yell = "shrieks"
+	say = "chirps"
+
 /datum/quirk/tongue_quirk/canine_aspect // We don't actually need an add for this because it does nothing, the post_add will do it for us.
 	name = "Canidae Traits"
 	desc = "Bark. You seem to act like a canine for whatever reason. This will replace most other tongue-based speech quirks."
@@ -41,7 +57,6 @@
 	icon = FA_ICON_DOG
 	value = 0
 	medical_record_text = "Patient was seen digging through the trash can. Keep an eye on them."
-
 	// As this is a subtype of tongue_quirk, we will set these variables for our post_add to use.
 	ask = "arfs"
 	exclaim = "wans"
