@@ -4,25 +4,6 @@
 	liked_foodtypes = old_tongue.liked_foodtypes
 	disliked_foodtypes = old_tongue.disliked_foodtypes
 	toxic_foodtypes = old_tongue.toxic_foodtypes
-	if (!organ_receiver || !organ_receiver.get_quirk(/datum/quirk/custom_tongue))
-		return
-	set_say_modifiers(organ_receiver)
-
-/// Used to set the say modifiers on organ_receiver (ideally a player.) Early returns if the target has a signal listening (runs /datum/quirk/custom_tongue/proc/tongue_setup())
-/obj/item/organ/tongue/proc/set_say_modifiers(mob/living/carbon/organ_receiver, ask, exclaim, whisper, yell, say)
-	var/obj/item/organ/tongue/tongue = organ_receiver.get_organ_slot(ORGAN_SLOT_TONGUE)
-	if(SEND_SIGNAL(organ_receiver, COMSIG_SET_SAY_MODIFIERS))
-		return // Early return so other quirks don't overwrite custom tongue.
-	if(ask)
-		organ_receiver.verb_ask = ask
-	if(exclaim)
-		organ_receiver.verb_exclaim = exclaim
-	if(whisper)
-		organ_receiver.verb_whisper = whisper
-	if(yell)
-		organ_receiver.verb_yell = yell
-	if(say)
-		tongue.say_mod = say
 
 /obj/item/organ/tongue/dog
 	name = "long tongue"

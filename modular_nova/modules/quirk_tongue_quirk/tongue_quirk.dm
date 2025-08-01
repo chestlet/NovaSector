@@ -1,4 +1,56 @@
-/datum/quirk/custom_tongue
+/// Subtype quirk that has some logic for altering the player's tongue.
+/datum/quirk/tongue_quirk
+	abstract_parent_type = /datum/quirk/tongue_quirk
+
+	// Default these to null, we'll set them on subtypes of tongue quirk directly if we need them. Leave as null if you want set_say_modifiers to not set the respective null var.
+	var/ask
+	var/exclaim
+	var/whisper
+	var/yell
+	var/say
+
+/datum/quirk/tongue_quirk/post_add(client/client_source) // Run this on all subtypes as a blanket rule. Overwrite on subtype if need be.
+	set_say_modifiers(ask, exclaim, whisper, yell, say)
+
+/datum/quirk/tongue_quirk/remove(client/client_source) // Same as above.
+	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
+	set_say_modifiers(initial(quirk_holder.verb_ask), initial(quirk_holder.verb_exclaim), initial(quirk_holder.verb_whisper), initial(quirk_holder.verb_yell), initial(tongue.say_mod))
+
+/// A proc to set the holder's say modifiers, used for ALL tongue_quirks in this file. Use Canidae Traits as an example, let say modifiers be handed in the post_add unless you need to do something extra unique.
+/datum/quirk/tongue_quirk/proc/set_say_modifiers(ask, exclaim, whisper, yell, say)
+	if(SEND_SIGNAL(quirk_holder, COMSIG_SET_SAY_MODIFIERS)) // If quirk_holder has COMSIG_SET_SAY_MODIFIERS registered to them then early return. Used for custom tongue to prevent overwrites.
+		return // Early return so other quirks don't overwrite custom tongue.
+	if(ask)
+		quirk_holder.verb_ask = ask
+	if(exclaim)
+		quirk_holder.verb_exclaim = exclaim
+	if(whisper)
+		quirk_holder.verb_whisper = whisper
+	if(yell)
+		quirk_holder.verb_yell = yell
+	if(say)
+		var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
+		tongue.say_mod = say
+
+/datum/quirk/tongue_quirk/canine_aspect // We don't actually need an add for this because it does nothing, the post_add will do it for us.
+	name = "Canidae Traits"
+	desc = "Bark. You seem to act like a canine for whatever reason. This will replace most other tongue-based speech quirks."
+	gain_text = span_notice("B-.. Bacon strips...")
+	lose_text = span_notice("You feel less abandonment issues.")
+	mob_trait = TRAIT_CANINE
+	icon = FA_ICON_DOG
+	value = 0
+	medical_record_text = "Patient was seen digging through the trash can. Keep an eye on them."
+
+	// As this is a subtype of tongue_quirk, we will set these variables for our post_add to use.
+	ask = "arfs"
+	exclaim = "wans"
+	whisper = "whimpers"
+	yell = "barks"
+	say = "woofs"
+
+
+/datum/quirk/tongue_quirk/custom_tongue
 	name = "Custom Tongue"
 	desc = "Your tongue is not standard. It has a shape and texture that is unique to you, affecting the way you speak."
 	gain_text = span_notice("Your tongue feels normal.")
@@ -46,7 +98,7 @@
 	savefile_key = "custom_tongue_say"
 
 /datum/quirk_constant_data/custom_tongue
-	associated_typepath = /datum/quirk/custom_tongue
+	associated_typepath = /datum/quirk/tongue_quirk/custom_tongue
 	customization_options = list(
 		/datum/preference/text/custom_tongue/ask,
 		/datum/preference/text/custom_tongue/exclaim,
@@ -56,7 +108,7 @@
 	)
 
 /// Used to set the quirk holder's say modifiers based on the client preferences. Runs on quirk add and on COMSIG_SET_SAY_MODIFIERS signal (sent in /obj/item/organ/tongue/proc/set_say_modifiers())
-/datum/quirk/custom_tongue/proc/tongue_setup() // This proc will run at most three times depending on the client prefs.
+/datum/quirk/tongue_quirk/custom_tongue/proc/set_custom_tongue() // This proc will run at most three times depending on the client prefs.
 	SIGNAL_HANDLER
 
 	var/client/client_source = quirk_holder.client
@@ -84,11 +136,10 @@
 
 	return TRUE
 
-/datum/quirk/custom_tongue/add(client/client_source)
-	RegisterSignal(quirk_holder, COMSIG_SET_SAY_MODIFIERS, PROC_REF(tongue_setup))
-	tongue_setup()
+/datum/quirk/tongue_quirk/custom_tongue/add(client/client_source)
+	RegisterSignal(quirk_holder, COMSIG_SET_SAY_MODIFIERS, PROC_REF(set_custom_tongue)) // Only register the signal, the post_add will trigger the proc.
 
-/datum/quirk/custom_tongue/remove(client/client_source)
+/datum/quirk/tongue_quirk/custom_tongue/remove(client/client_source)
 	var/obj/item/organ/tongue/tongue = quirk_holder.get_organ_slot(ORGAN_SLOT_TONGUE)
 	quirk_holder.verb_ask = initial(quirk_holder.verb_ask)
 	quirk_holder.verb_exclaim = initial(quirk_holder.verb_exclaim)
