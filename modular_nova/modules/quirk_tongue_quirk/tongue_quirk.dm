@@ -105,7 +105,7 @@
 	icon = FA_ICON_MOUSE
 	// nova_stars_only = TRUE You can kill yourself with this quirk very easily so I was advised to make it a Nova Star quirk, which is fair, but you can also just, do the same with wirecutters. We'll see how people act with it first.
 	ask = "sqweeks"
-	exclaim = "squeess"
+	exclaim = "squees"
 	whisper = "snuffles"
 	yell = "shrieks"
 	say = "squeaks"
