@@ -173,4 +173,5 @@
 	if(item_in_pocket)
 		item_in_pocket.attack_hand(src)
 		return TRUE
+
 	return FALSE
