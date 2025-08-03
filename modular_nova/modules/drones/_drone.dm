@@ -20,14 +20,13 @@
 // Additional Traits
 /mob/living/basic/drone/Initialize(mapload)
 	. = ..()
-		add_traits(list(
-			TRAIT_LAVA_IMMUNE,// Going to Lavaland
-			TRAIT_SPACEWALK,// No more 'admeme im stuck fix me' ahelps, thanks
-			TRAIT_FIREDOOR_STOP,// No more drone squishies, lets drones be a doorstop if they want to be
-			TRAIT_IMMERSE_STOPPED,// Drones float, as do most insects
-			TRAIT_FOOD_CHEF_MADE,// Drones get acknowledged for making food
-		),
-			INNATE_TRAIT)
+	add_traits(list(
+		TRAIT_LAVA_IMMUNE,// Going to Lavaland
+		TRAIT_SPACEWALK,// No more 'admeme im stuck fix me' ahelps, thanks
+		TRAIT_FIREDOOR_STOP,// No more drone squishies, lets drones be a doorstop if they want to be
+		TRAIT_IMMERSE_STOPPED,// Drones float, as do most insects
+		TRAIT_FOOD_CHEF_MADE,// Drones get acknowledged for making food
+	), INNATE_TRAIT)
 
 //This is so we log all machinery interactions for drones
 /obj/machinery/attack_drone(mob/living/basic/drone/user, list/modifiers)
