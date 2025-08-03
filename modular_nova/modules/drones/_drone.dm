@@ -11,12 +11,12 @@
 /mob/living/basic/drone/Initialize(mapload)
 	. = ..()
 	name = "[initial(name)] [rand(0,9)]-[rand(100,999)]" //So that we can identify drones from each other
-	
+
 // Access
 /obj/item/card/id/advanced/simple_bot
 	//So that the drones can actually access everywhere and fix it
 	trim = /datum/id_trim/centcom
-	
+
 // Additional Traits
 /mob/living/basic/drone/Initialize(mapload)
 	. = ..()
@@ -32,15 +32,46 @@
 /obj/machinery/attack_drone(mob/living/basic/drone/user, list/modifiers)
 	. = ..()
 	user.log_message("[key_name(user)] interacted with [src] at [AREACOORD(src)]", LOG_GAME)
-	
+
 // Storage Changes
+/mob/living/basic/drone/Initialize(mapload)
+	. = ..()
+	// Register signals for interaction control
+	RegisterSignal(src, COMSIG_CLICK, PROC_REF(handle_click), override = TRUE)
+	RegisterSignal(src, COMSIG_CLICK_CTRL, PROC_REF(on_ctrl_click))
+	RegisterSignal(src, COMSIG_CLICK_ALT, PROC_REF(handle_alt_click))
+	RegisterSignal(src, COMSIG_MOUSEDROP_ONTO, PROC_REF(on_mousedrop))
+
+/datum/hud/dextrous/drone/New(mob/owner)
+	. = ..()
+	var/atom/movable/screen/inventory/inv_box
+
+	// Left pocket UI element
+	inv_box = new /atom/movable/screen/inventory(null, src)
+	inv_box.name = "left pocket"
+	inv_box.icon = ui_style
+	inv_box.icon_state = "pocket"
+	inv_box.icon_full = "template_small"
+	inv_box.screen_loc = ui_storage1
+	inv_box.slot_id = ITEM_SLOT_LPOCKET
+	static_inventory += inv_box
+
+	// Right pocket UI element
+	inv_box = new /atom/movable/screen/inventory(null, src)
+	inv_box.name = "right pocket"
+	inv_box.icon = ui_style
+	inv_box.icon_state = "pocket"
+	inv_box.icon_full = "template_small"
+	inv_box.screen_loc = ui_storage2
+	inv_box.slot_id = ITEM_SLOT_RPOCKET
+	static_inventory += inv_box
+
 // So drones aren't forced to carry around a nodrop toolbox essentially, and so drones don't have to choose between a multitool and an upgraded welder
 // Adds things to hopefully reduce drones raiding atmos or engineering
-
 // Sets our new storage
 /mob/living/basic/drone/
 	default_storage = /obj/item/storage/backpack/duffelbag/drone
-	
+
 // Then populates the drone duffelbag with our extra items
 // Overwrites original proc because new tools means overwrites, also reorganization because :>
 /obj/item/storage/backpack/duffelbag/drone/PopulateContents()
@@ -58,6 +89,17 @@
 	new /obj/item/stack/cable_coil(src)
 	new /obj/item/soap/nanotrasen(src)// Drones clean
 
+// Language Holder
+/mob/living/basic/drone
+	initial_language_holder = /datum/language_holder/drone_nova
+
+// Sets our new Language Handler
+/mob/living/basic/drone/binarycheck()
+	var/area/our_area = get_area(src)
+	if(our_area.area_flags & BINARY_JAMMING)
+		return FALSE
+	return TRUE
+
 //
 // Station Drones
 //
@@ -71,9 +113,10 @@
 
 // Station Drone mob changes
 /mob/living/basic/drone
-
-// Sets our Language Handler
-	initial_language_holder = /datum/language_holder/drone_nova
+	/// Left pocket item reference
+	var/obj/item/l_store
+	/// Right pocket item reference
+	var/obj/item/r_store
 
 // Drone Laws and Chain of Command
 	laws = \
@@ -115,10 +158,10 @@
 			"Prefix your message with :b to speak in I/O / Silicon Radio.\n")+\
 		span_boldwarning(
 			"When in doubt, make an Admin Help.\n")
-			
+
 // Overrides and expands speech emote types
 	speak_emote = list("chirps", "clicks", "buzzes", "chitters", "beeps softly", "pings")
-	
+
 // So that drones can do things without worrying about stuff
 	shy = FALSE
 
