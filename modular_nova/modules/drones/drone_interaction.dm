@@ -33,4 +33,5 @@
 /mob/living/basic/drone/CanAllowThrough(atom/movable/mover, border_dir)
 	. = ..()
 	if(isdrone(mover))
+
 		return FALSE
