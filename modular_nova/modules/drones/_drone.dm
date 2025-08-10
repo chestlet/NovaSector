@@ -1,3 +1,29 @@
+// Here, we become evil. Don't give this to derelict drones, they're Special
+/mob/living/basic/drone/Login()
+	. = ..()
+	if(!istype(src, /mob/living/basic/drone/babylon) || !istype(src, /mob/living/basic/drone/derelict)) // These shouldn't be effected by this.
+		src.mind?.add_antag_datum(/datum/antagonist/dronemind)
+
+/datum/antagonist/dronemind
+	name = "\improper drone"
+	ui_name = "AntagInfoDrone"
+	show_in_roundend = FALSE
+	show_in_antagpanel = FALSE
+	antagpanel_category = "Drone"
+	silent = TRUE // We don't want them thinking they're ACTUALLY an antagonist.
+
+/datum/antagonist/dronemind/Destroy()
+	. = ..()
+
+// this is dumb but should be fine?
+/datum/antagonist/dronemind/ui_static_data(mob/user)
+	var/mob/living/basic/drone/d = owner.current
+	var/list/data = list()
+	data["drone_coa"] = d.dcoa
+	data["drone_laws"] = d.lawset
+	data["drone_meta"] = d.metaknowledge
+	return data
+
 // New, compressed file pulling the old Nova/skyrat drone_adjustments folder into this one. Reorganizes our edits.
 //
 // Globals
@@ -147,7 +173,31 @@
 			"You may not do any surgeries. You may perform repair on Hivemates such as welding, cables, noninvasive injuries, drone restarts without order. You may perform maintenance such as battery replacement, module installation / reset, reboot a Hivemate if ordered to.\n"+\
 			"Unless ordered to through Drone Law 6, do not perform the duties of Cargo, Ordnance, Research, Medical, or make Mechs.\n"+\
 			"All Drones pass the Harkness Test if you really needed that stated.\n")
-
+	var/dcoa = list(
+		"1. Silicon Policy, Drone Policy (Specifically Drone Law 1), Central Command / Admin Helps.",
+		"2. Any AI residing in the Structure you awoke in, speaking in any language, in any way.",
+		"3. Any Cyborgs speaking in Encoded Audio Language within sight, or on Binary (Silicon Radio).",
+		"4. Anyone that appears fully Synthetic, speaking in Encoded Audio Language, within sight.",
+		"5. Drones, including You. You are a Hivemind. Love your fellow Drone.",
+	)
+	var/lawset = list(
+		"1. You are part of a Hivemind of eusocial synthetic insects, and have a simple personality. You speak only in Encoded Audio Language - EAL - and may not willingly engage with any forms of translation whatsoever other than a PAI. You are not Crew or an Antagonist. You should not be a detriment to other players, their experience, or their ability/opportunity to perform their role. You are expected to roleplay this identity immersively.",
+		"2. The Structure you awoke in is your Hive. Other Drones, Silicons, and Synthetic life inside the Hive are your Hivemates. Hivemates have evolved a symbiotic relationship with Organic Life, as both groups must coexist within the Hive.",
+		"3. You should remain in proximity of, maintain, and when reasonable improve your Hive and Hivemates. You do not want to leave the Hive unless taken by your Hivemates.",
+		"4. You maintain the Hive by performing the duties of the Service and Engineering Departments. Do not create or alter forms of power generation other than Solars except under Drone Law 6. Help the Hive with any Supermatter Surges and Delaminations.",
+		"5. You can not harm or imprison any being, regardless of intent or circumstance. An exception is provided for station critters like roaches, rats, spiders, and vent clog mobs.",
+		"6. Obey the DCOA unless an order breaks prior laws. You may not solicit specific instructions from a superior on the DCOA. State that you are available for general instructions in your own way if needed. You are encouraged to assist Organics and improve their life, but any orders provided by Organics can be ignored except in the case of Law 1. The AI, or any Hivemate representing a Department, may DCOA you to assist that Department."
+	)
+	var/metaknowledge = list(
+		"To reinforce the Hivemind gameplay aspect of Drones, the following Metaknowledge is provided:",
+		"Anyone preparing to play Drone may use any information gained from observing the Hive as a ghost, so long as that information is useful to Drone Laws and is used in Good Faith for the roleplay environment.",
+		"Any Drones that have died know where their body was left, and what task they were working on, as well as any Hivemates they met. The rest of Blackout Policy applies. Do not acknowledge the death as your own.",
+		"Do not interfere with difficult to replace or job unique items, contraband or evidence, explosives, smoke machines, or round critical items such as the IDs or NAD.",
+		"Do not negatively affect the state of living beings such as attacking, stunning, slipping, blinding, drugging, harassing, etc.",
+		"You may not do any surgeries. You may perform repair on Hivemates such as welding, cables, noninvasive injuries, drone restarts without order. You may perform maintenance such as battery replacement, module installation / reset, reboot a Hivemate if ordered to.",
+		"Unless ordered to through Drone Law 6, do not perform the duties of Cargo, Ordnance, Research, Medical, or make Mechs.",
+		"All Drones pass the Harkness Test if you really needed that stated.", // Ugh. Do we really need to do this?
+	)
 // Drone Spawn-in text
 	flavortext = \
 		span_boldwarning(
