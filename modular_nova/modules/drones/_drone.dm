@@ -1,4 +1,5 @@
-// Here, we become evil. Don't give this to derelict drones, they're Special
+// Hi Moonridden, reorganize code as necessary! It's a bit messy.
+// Here, we become evil. Antag datum to separate drones in the orbit list. Don't give this to derelict drones, they're Special
 /mob/living/basic/drone/Login()
 	. = ..()
 	if(!istype(src, /mob/living/basic/drone/babylon) || !istype(src, /mob/living/basic/drone/derelict)) // These shouldn't be effected by this.
